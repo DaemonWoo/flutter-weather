@@ -1,19 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '/injection_container.dart';
+import '/presentation/pages/weather.dart';
+import 'presentation/bloc/weather_bloc.dart';
 
 void main() {
-  runApp(const MainApp());
+  setupLocator();
+  runApp(const MyApp());
 }
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
+    return MultiBlocProvider(
+      providers: [BlocProvider(create: (_) => locator<WeatherBloc>())],
+      child: const MaterialApp(
+        home: WeatherPage(),
+        debugShowCheckedModeBanner: false,
       ),
     );
   }

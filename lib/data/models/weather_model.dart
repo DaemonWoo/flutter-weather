@@ -6,7 +6,7 @@ class WeatherModel extends WeatherEntity {
     required super.main,
     required super.description,
     required super.iconCode,
-    required super.temperature,
+    required super.temperatureKelvin,
     required super.pressure,
     required super.humidity,
   });
@@ -16,7 +16,7 @@ class WeatherModel extends WeatherEntity {
     main: json['weather'][0]['main'],
     description: json['weather'][0]['description'],
     iconCode: json['weather'][0]['icon'],
-    temperature: json['main']['temp'],
+    temperatureKelvin: json['main']['temp'],
     pressure: json['main']['pressure'],
     humidity: json['main']['humidity'],
   );
@@ -25,7 +25,11 @@ class WeatherModel extends WeatherEntity {
     'weather': [
       {'main': main, 'description': description, 'icon': iconCode},
     ],
-    'main': {'temp': temperature, 'pressure': pressure, 'humidity': humidity},
+    'main': {
+      'temp': temperatureKelvin,
+      'pressure': pressure,
+      'humidity': humidity,
+    },
     'name': cityName,
   };
 
@@ -34,7 +38,7 @@ class WeatherModel extends WeatherEntity {
     main: main,
     description: description,
     iconCode: iconCode,
-    temperature: temperature,
+    temperatureKelvin: temperatureKelvin,
     pressure: pressure,
     humidity: humidity,
   );
