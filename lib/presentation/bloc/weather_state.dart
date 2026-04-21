@@ -2,31 +2,31 @@ import 'package:equatable/equatable.dart';
 
 import '/domain/entities/weather.dart';
 
-sealed class WeatherState extends Equatable {
-  const WeatherState();
+enum WeatherStatus { initial, loading, loaded, failure }
+
+class WeatherState extends Equatable {
+  final WeatherStatus status;
+  final WeatherEntity? weather;
+  final String? errorMessage;
+
+  const WeatherState({
+    this.status = WeatherStatus.initial,
+    this.weather,
+    this.errorMessage,
+  });
+
+  WeatherState copyWith({
+    WeatherStatus? status,
+    WeatherEntity? weather,
+    String? errorMessage,
+  }) {
+    return WeatherState(
+      status: status ?? this.status,
+      weather: weather ?? this.weather,
+      errorMessage: errorMessage ?? this.errorMessage,
+    );
+  }
 
   @override
-  List<Object?> get props => [];
-}
-
-class WeatherEmpty extends WeatherState {}
-
-class WeatherLoading extends WeatherState {}
-
-class WeatherLoaded extends WeatherState {
-  const WeatherLoaded(this.result);
-
-  final WeatherEntity result;
-
-  @override
-  List<Object?> get props => [result];
-}
-
-class WeatherLoadFailure extends WeatherState {
-  const WeatherLoadFailure(this.message);
-
-  final String message;
-
-  @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [status, weather, errorMessage];
 }

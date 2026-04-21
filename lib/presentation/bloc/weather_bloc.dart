@@ -8,26 +8,29 @@ import '/presentation/bloc/weather_state.dart';
 class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
   final GetCurrentWeatherUseCase _getCurrentWeatherUseCase;
 
-  WeatherBloc(this._getCurrentWeatherUseCase) : super(WeatherEmpty()) {
+  WeatherBloc(this._getCurrentWeatherUseCase) : super(WeatherState()) {
     on<OnCityChanged>((event, emit) async {
       final query = event.cityName.trim();
       if (query.isEmpty) {
-        if (state is! WeatherEmpty) {
-          emit(WeatherEmpty());
-        }
+        emit(state.copyWith(status: WeatherStatus.initial));
         return;
       }
 
-      emit(WeatherLoading());
+      emit(state.copyWith(status: WeatherStatus.loading));
 
       final result = await _getCurrentWeatherUseCase.execute(query);
 
       result.fold(
         (failure) {
-          emit(WeatherLoadFailure(failure.message));
+          emit(
+            state.copyWith(
+              status: WeatherStatus.failure,
+              errorMessage: failure.message,
+            ),
+          );
         },
         (data) {
-          emit(WeatherLoaded(data));
+          emit(state.copyWith(status: WeatherStatus.loaded, weather: data));
         },
       );
     }, transformer: debounceLatest(const Duration(milliseconds: 500)));
